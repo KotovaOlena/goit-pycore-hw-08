@@ -86,11 +86,18 @@ class AddressBookBot:
 
     def add_record(self, name, phone):
         if name in self.book:
-            self.book[name].add_phone(phone)
+            try:
+                self.book[name].add_phone(phone)
+            except ValueError as e:
+                print(e)
         else:
             record = Record(name)
-            record.add_phone(phone)
-            self.book.add_record(record)
+            try:
+                record.add_phone(phone)
+            except ValueError as e:
+                print(e)
+            else:
+                self.book.add_record(record)
 
     def change_phone(self, name, new_phone):
         if name in self.book:
@@ -155,6 +162,8 @@ def main():
         elif command == "add":
             if len(args) != 2:
                 print("Invalid number of arguments. Usage: add [name] [phone]")
+            elif len(args[1]) != 10:
+                print("Invalid phone number length. Phone number must contain 10 digits.")
             else:
                 bot.add_record(args[0], args[1])
                 print("Contact added successfully.")
